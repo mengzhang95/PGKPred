@@ -17,14 +17,14 @@ for i=1:SeqNumber
     if L>=15
       Number_Length_15=L-15+1;%The number of fragments of length 15 in the i-th sample
      for j=1:Number_Length_15
-        fragment_j=Se(j:j+14);%½ØÈ¡³¤15Æ¬¶Î£»
+        fragment_j=Se(j:j+14);%æˆªå–é•¿15ç‰‡æ®µï¼›
         Name{1,t+j}=char(head(i));
         testD{1,t+j}=(fragment_j);
      end   
        t=t+Number_Length_15;
     end
 end
-Total_number_fragments=length(Name);%Ò»¹²½ØÈ¡µÄÑù±¾
+Total_number_fragments=length(Name);%ä¸€å…±æˆªå–çš„æ ·æœ¬
 AA='ACDEFGHIKLMNPQRSTVWYX';
 V=15;%the length of each sample
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -34,28 +34,27 @@ PPT2 = CTDC(Name,testD);
 %%
 load allFeature.mat
 ytest=zeros(Total_number_fragments,1);
-ytest=[1*ones(1,16),-1*ones(1,1464)]';
-%µÚ1¸öÌØÕ÷·ÖÀàÆ÷
+%ç¬¬1ä¸ªç‰¹å¾åˆ†ç±»å™¨
 xtest=PPT1;
 model=svmtrain(TrainLabel1,TrainFeatureVector1, '-c 32 -g 4 -w1 1 -w-1 1 -t 2');
 [predict_label1, accuracy1,dec_values1]=svmpredict(ytest,xtest,model);
 
-%µÚ2¸öÌØÕ÷·ÖÀàÆ÷
+%ç¬¬2ä¸ªç‰¹å¾åˆ†ç±»å™¨
 xtest=PPT1;
 model=svmtrain(TrainLabel2,TrainFeatureVector2, '-c 32 -g 2 -w1 1 -w-1 1 -t 2');
 [predict_label2, accuracy2, dec_values2]=svmpredict(ytest,xtest,model);
 
-%µÚ3¸öÌØÕ÷·ÖÀàÆ÷
+%ç¬¬3ä¸ªç‰¹å¾åˆ†ç±»å™¨
 xtest=PPT1;
 model=svmtrain(TrainLabel3,TrainFeatureVector3, '-c 32 -g 4 -w1 1 -w-1 1 -t 2');
 [predict_label3, accuracy3, dec_values3]=svmpredict(ytest,xtest,model);
 
-%µÚ4¸öÌØÕ÷·ÖÀàÆ÷
+%ç¬¬4ä¸ªç‰¹å¾åˆ†ç±»å™¨
 xtest=PPT2;
 model=svmtrain(TrainLabel4,TrainFeatureVector4, '-c 32 -g 1 -w1 1 -w-1 1 -t 2');
 [predict_label4, accuracy4, dec_values4]=svmpredict(ytest,xtest,model);
 
-%µÚ5¸öÌØÕ÷·ÖÀàÆ÷
+%ç¬¬5ä¸ªç‰¹å¾åˆ†ç±»å™¨
 xtest=PPT2;
 model=svmtrain(TrainLabel5,TrainFeatureVector5, '-c 32 -g 1 -w1 1 -w-1 1 -t 2');
 [predict_label5, accuracy5, dec_values5]=svmpredict(ytest,xtest,model);
@@ -73,32 +72,6 @@ for i=1:Total_number_fragments
 end
 fclose(fidout);
 
-
-
-
-
-
-%¼¯³ÉÒÔÉÏ·ÖÀàÆ÷
-ytest= [1*ones(1,16),-1*ones(1,1464)]';
-pre=predict_label1+predict_label2+predict_label3+predict_label4+predict_label5;
-dec_values=(dec_values1+dec_values2+dec_values3+dec_values4+dec_values5)/5;
-
-t=size(ytest,1);
-pt=numel(find(ytest==1));
-nt=numel(find(ytest==-1));
-TP=numel(find(pre(1:pt,1)>=0));
-TN=numel(find(pre(pt+1:t,1)<0));
-% [X,Y,THRE,AUC] = perfcurve(ytest,dec_values(:,1),'1');
-% plot(X,Y)
-% title('The ROC curves');
-FP=nt-TN;
-FN=pt-TP;
-value=[TP,FP,TN,FN];
-Sn=TP/(TP+FN);
-Sp=TN/(TN+FP);
-Acc=(TP+TN)/(TP+TN+FP+FN);
-MCC=(TP*TN-FP*FN)/sqrt((TP+FP)*(TP+FN)*(TN+FP)*(TN+FN));
-Result=[Sn,Sp,Acc,MCC]
 
 
 
